@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" id="themeColor" content="#070808" />
+<title>Arketz Design Studio — Architecture & Interiors</title>
+<meta name="description" content="Arketz Design Studio turns sketches and concepts into striking architecture, interiors and photorealistic visualizations." />
+<link rel="icon" id="favicon" href="data:," />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+/* ===================================================================
+   TOKENS — every colour is derived from the logo.
+   =================================================================== */
+:root{
+  --hue:0; --sat:0%; --k:0; --L:88%; --rgb:232,236,238;
+  --bg:hsl(var(--hue) calc(70% * var(--k)) 3%);
+  --s1:hsl(var(--hue) calc(55% * var(--k)) 13%);
+  --s2:hsl(var(--hue) calc(60% * var(--k)) 8%);
+  --s3:hsl(var(--hue) calc(55% * var(--k)) 11%);
+  --s4:hsl(var(--hue) calc(65% * var(--k)) 5%);
+  --s5:hsl(var(--hue) calc(60% * var(--k)) 15%);
+  --cyan:hsl(var(--hue) var(--sat) var(--L));
+  --cyan-2:hsl(var(--hue) calc(var(--sat) * .8) calc(var(--L) - 10%));
+  --cyan-b:hsl(var(--hue) var(--sat) var(--L));
+  --cyan-hi:hsl(var(--hue) var(--sat) calc(var(--L) + 14%));
+  --on:hsl(var(--hue) calc(80% * var(--k)) 5%);
+  --cyan-glow:rgba(var(--rgb),.35);
+  --line:rgba(var(--rgb),.22);
+  --line-soft:rgba(255,255,255,.08);
+  --card:linear-gradient(180deg,hsl(var(--hue) calc(55% * var(--k)) 14% / .62),hsl(var(--hue) calc(60% * var(--k)) 7% / .7));
+  --text:#f2f7f9;
+  --muted:hsl(var(--hue) calc(14% * var(--k)) 64%);
+  --purple:hsl(calc(var(--hue) + 110) calc(100% * var(--k)) 70%);
+  --h:'Manrope',system-ui,sans-serif;
+  --b:'Inter',system-ui,sans-serif;
+  --m:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--bg);color:var(--text);font-family:var(--b);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 45% at 85% 0%,rgba(var(--rgb),.12),transparent 70%),
+             radial-gradient(50% 40% at 0% 55%,rgba(var(--rgb),.09),transparent 70%)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{max-width:100%;display:block}
+svg{display:block}
+.wrap{width:min(1240px,100% - 48px);margin-inline:auto}
+section{padding:110px 0;position:relative}
+.cy{color:var(--cyan)}
+h1,h2,h3,h4{font-family:var(--h)}
+.h2{font-size:clamp(34px,4.6vw,64px);font-weight:800;letter-spacing:-.045em;line-height:1.02;margin-bottom:20px}
+.sub{color:var(--muted);font-size:clamp(16px,1.5vw,19px);max-width:560px;line-height:1.7}
+.center{text-align:center}.center .sub{margin-inline:auto}
+.head{margin-bottom:60px}
+
+.ico{width:22px;height:22px;stroke:var(--cyan);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 28px;border-radius:10px;font-weight:600;font-size:15px;transition:.25s;border:1px solid transparent;white-space:nowrap}
+.btn-fill{background:var(--cyan-2);color:var(--on);box-shadow:0 8px 34px -8px var(--cyan-glow)}
+.btn-fill:hover{background:var(--cyan);transform:translateY(-2px);box-shadow:0 12px 44px -6px var(--cyan-glow)}
+.btn-out{border-color:var(--cyan-2);color:var(--cyan);background:hsl(var(--hue) calc(60% * var(--k)) 12% / .35)}
+.btn-out:hover{background:rgba(var(--rgb),.12);border-color:var(--cyan)}
+.btn.sm{height:40px;padding:0 20px;font-size:14px}
+
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+.rows{display:grid;gap:18px;margin-top:34px}
+.row{display:flex;gap:18px;align-items:flex-start}
+.row .ic{flex:none;width:54px;height:54px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(180deg,var(--s1),var(--s2));border:1px solid var(--line)}
+.row h4{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:2px}
+.row p{color:var(--muted);font-size:14.5px;line-height:1.55}
+
+.frame{position:relative;border-radius:28px;overflow:hidden;border:1px solid var(--line);background:var(--s4);box-shadow:0 40px 110px -40px rgba(var(--rgb),.4)}
+.frame>[data-scene],.frame .sc{position:absolute;inset:0}
+.frame svg,.sc svg{width:100%;height:100%}
+.chip-label{position:absolute;left:18px;bottom:18px;z-index:3;font-family:var(--m);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:10px;background:hsl(var(--hue) calc(70% * var(--k)) 4% / .72);border:1px solid var(--line);backdrop-filter:blur(8px)}
+
+/* PROMO + NAV */
+.promo{position:relative;background:linear-gradient(90deg,var(--s2),var(--s5) 50%,var(--s2));border-bottom:1px solid var(--line);padding:14px 56px 14px 24px}
+.promo-in{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center}
+.promo b{font-family:var(--h);color:var(--cyan);font-weight:800;letter-spacing:.01em;font-size:15px;text-transform:uppercase}
+.promo .sep{width:1px;height:26px;background:var(--line)}
+.promo .t{font-size:13.5px;color:#d3e3e8}
+.btn-cy{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 24px;border-radius:8px;background:var(--cyan-b);color:var(--on);font-weight:700;font-size:14px;transition:.25s}
+.btn-cy:hover{background:var(--cyan-hi);transform:translateY(-1px)}
+.promo-x{position:absolute;right:22px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:20px;opacity:.85}
+.promo.hide{display:none}
+
+.nav{position:sticky;top:0;z-index:100;background:hsl(var(--hue) calc(70% * var(--k)) 4% / .72);backdrop-filter:blur(16px);border-bottom:1px solid var(--line-soft)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:78px;gap:24px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{height:46px;width:auto}
+.brand b{display:block;font-family:var(--h);font-size:20px;letter-spacing:.2em;font-weight:700;line-height:1}
+.brand small{display:block;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+.links{display:flex;gap:38px;font-size:14px;color:#c9d6db}
+.links a{transition:.2s;position:relative}
+.links a:hover{color:var(--cyan)}
+.burger{display:none;width:44px;height:44px;border:1px solid var(--line);border-radius:10px;place-items:center}
+.burger i,.burger i::before,.burger i::after{display:block;width:18px;height:1.6px;background:var(--cyan);position:relative}
+.burger i::before,.burger i::after{content:"";position:absolute;left:0}
+.burger i::before{top:-6px}.burger i::after{top:6px}
+.mmenu{display:none;position:fixed;inset:0;z-index:99;background:hsl(var(--hue) calc(70% * var(--k)) 4% / .97);flex-direction:column;align-items:center;justify-content:center;gap:26px;font-family:var(--h);font-size:30px;font-weight:700}
+.mmenu.open{display:flex}
+
+/* HERO */
+.hero{padding:30px 0 80px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:20px;min-height:calc(100vh - 180px)}
+.hero-grid>*{min-width:0}
+.hero h1{font-size:clamp(38px,4.9vw,76px);font-weight:800;letter-spacing:-.05em;line-height:1;margin-bottom:28px;overflow-wrap:break-word}
+.hero .sub{margin-bottom:38px;max-width:470px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.orbit{position:relative;width:100%;aspect-ratio:1/.92;min-height:420px}
+.orbit canvas{position:absolute;inset:0;z-index:1;pointer-events:none}
+.ring{position:absolute;left:50%;top:48%;border-radius:50%;border:1px solid rgba(var(--rgb),.13);transform:translate(-50%,-50%)}
+.ring.r1{width:58%;aspect-ratio:1}.ring.r2{width:84%;aspect-ratio:1;border-color:rgba(var(--rgb),.09)}.ring.r3{width:112%;aspect-ratio:1;border-color:rgba(var(--rgb),.06)}
+.core{position:absolute;left:50%;top:48%;width:34%;transform:translate(-50%,-50%);z-index:2;animation:pulse 5s ease-in-out infinite}
+.core img{width:100%;filter:drop-shadow(0 0 16px rgba(var(--rgb),.85)) drop-shadow(0 0 54px rgba(var(--rgb),.5))}
+@keyframes pulse{50%{filter:brightness(1.12)}}
+.node{position:absolute;z-index:3;text-align:center;animation:float 7s ease-in-out infinite}
+.node .bubble{width:clamp(112px,13.5vw,176px);aspect-ratio:1;border-radius:50%;overflow:hidden;border:2px solid rgba(var(--rgb),.5);box-shadow:0 0 0 6px rgba(var(--rgb),.07),0 0 50px rgba(var(--rgb),.3)}
+.node .bubble svg{width:100%;height:100%}
+.node span{display:block;margin-top:12px;font-weight:700;font-size:14px}
+.node.n1{top:-2%;right:12%}
+.node.n2{left:0;bottom:8%;animation-delay:-2s}
+.node.n3{right:-1%;bottom:2%;animation-delay:-4s}
+@keyframes float{50%{transform:translateY(-10px)}}
+
+/* FEATURES + COMPARE */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:70px;align-items:center}
+.split>*{min-width:0}
+.split.eq{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.split.narrow{grid-template-columns:minmax(0,.85fr) minmax(0,1fr)}
+.compare{position:relative;aspect-ratio:16/10;border-radius:28px;overflow:hidden;border:1px solid var(--line);cursor:ew-resize;user-select:none;touch-action:none;box-shadow:0 40px 110px -40px rgba(var(--rgb),.4)}
+.compare .lay{position:absolute;inset:0}
+.compare .lay svg{width:100%;height:100%}
+.compare .before{clip-path:inset(0 50% 0 0)}
+.compare .tg{position:absolute;bottom:16px;font-family:var(--m);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:9px;background:hsl(var(--hue) calc(70% * var(--k)) 4% / .75);border:1px solid var(--line);z-index:4}
+.compare .tg.l{left:16px}.compare .tg.r{right:16px}
+.handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--cyan-hi);z-index:5;transform:translateX(-1px);box-shadow:0 0 18px var(--cyan)}
+.handle i{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;background:hsl(var(--hue) calc(70% * var(--k)) 9% / .92);border:1px solid var(--cyan);display:grid;place-items:center}
+.handle i svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.thumb{position:relative;aspect-ratio:16/10;border-radius:16px;overflow:hidden;border:1px solid var(--line-soft);transition:.3s}
+.thumb svg{width:100%;height:100%}
+.thumb span{position:absolute;left:10px;bottom:8px;font-size:12px;font-weight:700;text-shadow:0 1px 8px #000}
+.thumb:hover,.thumb.on{border-color:var(--cyan);box-shadow:0 0 28px -4px var(--cyan-glow)}
+
+/* CAROUSEL */
+.cc{position:relative;height:330px;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.cc-card{position:absolute;left:50%;top:50%;width:clamp(190px,17vw,232px);height:200px;border-radius:22px;border:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:20px;transition:transform .7s cubic-bezier(.2,.7,.2,1),opacity .6s,border-color .4s,box-shadow .4s}
+.cc-card .cc-ic{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:var(--s3);border:1px solid var(--line);margin-bottom:6px;font-family:var(--h);font-weight:800;color:var(--cyan);font-size:18px}
+.cc-card .cc-ic .ico{width:28px;height:28px}
+.cc-card b{font-family:var(--h);font-size:16px;font-weight:700}
+.cc-card small{color:var(--muted);font-size:13px}
+.cc-card.on{height:250px;border-color:rgba(var(--rgb),.65);box-shadow:0 0 70px -14px var(--cyan-glow),inset 0 0 40px rgba(var(--rgb),.06)}
+.cc-card.on b{font-size:19px}
+.cc-card.on .cc-ic{width:66px;height:66px}
+.dots{display:flex;justify-content:center;gap:12px;margin-top:26px;flex-wrap:wrap}
+.dots button{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22);transition:.3s}
+.dots button.on{background:var(--cyan);box-shadow:0 0 12px var(--cyan);transform:scale(1.25)}
+
+/* WALKTHROUGH */
+.cine{display:grid;grid-template-columns:1.3fr 1fr;gap:64px;align-items:center}
+.cine .frame{aspect-ratio:16/10}
+.cine .frame .sc{transition:opacity .5s}
+.gal{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:26px}
+.gal button{position:relative;aspect-ratio:16/10;border-radius:14px;overflow:hidden;border:1px solid var(--line-soft);transition:.3s}
+.gal button svg{width:100%;height:100%}
+.gal button span{position:absolute;left:8px;bottom:6px;right:8px;font-size:11.5px;font-weight:700;text-align:left;text-shadow:0 1px 8px #000;line-height:1.2}
+.gal button.on,.gal button:hover{border-color:var(--cyan);box-shadow:0 0 26px -6px var(--cyan-glow)}
+
+/* PROJECTS */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.fchip{padding:10px 22px;border-radius:999px;border:1px solid var(--line);font-size:14px;color:#c0cdd2;transition:.25s}
+.fchip:hover{border-color:var(--cyan);color:var(--cyan)}
+.fchip.on{background:var(--cyan);border-color:var(--cyan);color:var(--on);font-weight:600}
+.pgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.proj{position:relative;aspect-ratio:4/3.2;border-radius:22px;overflow:hidden;border:1px solid var(--line-soft);transition:.4s;display:block}
+.proj .sc{position:absolute;inset:0;transition:transform .9s ease}
+.proj .sc svg{width:100%;height:100%}
+.proj:hover{border-color:var(--cyan);transform:translateY(-6px);box-shadow:0 30px 70px -30px var(--cyan-glow)}
+.proj:hover .sc{transform:scale(1.07)}
+.proj::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,hsl(var(--hue) calc(80% * var(--k)) 3% / .92),transparent 58%)}
+.proj .inf{position:absolute;z-index:2;left:22px;right:22px;bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.proj h3{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.proj p{font-size:13px;color:#bccbd0}
+.proj .go{width:42px;height:42px;border-radius:50%;border:1px solid var(--cyan);display:grid;place-items:center;flex:none;transition:.3s}
+.proj:hover .go{background:var(--cyan)}
+.proj:hover .go .ico{stroke:var(--on)}
+.proj.hidden{display:none}
+
+/* COVERFLOW */
+.cf{position:relative;height:420px;max-width:1240px;margin:0 auto;overflow:hidden}
+.cf-card{position:absolute;left:50%;top:50%;width:min(300px,64vw);height:360px;border-radius:24px;overflow:hidden;border:1px solid var(--line-soft);background:var(--s4);transition:transform .8s cubic-bezier(.2,.7,.2,1),opacity .6s,border-color .4s,filter .6s;cursor:pointer}
+.cf-card .sc{position:absolute;inset:0}
+.cf-card .sc svg{width:100%;height:100%}
+.cf-card .cap{position:absolute;left:0;right:0;bottom:0;padding:46px 20px 18px;background:linear-gradient(180deg,transparent,hsl(var(--hue) calc(70% * var(--k)) 4% / .92) 55%);opacity:0;transition:opacity .5s;text-align:left}
+.cf-card .cap small{display:block;font-family:var(--m);font-size:10px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase}
+.cf-card .cap b{font-family:var(--h);font-size:18px;font-weight:700;display:block;margin-top:4px}
+.cf-card.on{border:1.5px solid var(--cyan);box-shadow:0 0 80px -12px var(--cyan-glow)}
+.cf-card.on .cap{opacity:1}
+.cf-card:not(.on){filter:brightness(.55) saturate(.8)}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:1px solid var(--cyan-2);display:grid;place-items:center;z-index:20;background:hsl(var(--hue) calc(65% * var(--k)) 7% / .8);transition:.25s}
+.arrow:hover{background:rgba(var(--rgb),.15);border-color:var(--cyan)}
+.arrow.l{left:0}.arrow.r{right:0}
+.infobox{max-width:960px;margin:38px auto 0;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:20px;background:var(--card);overflow:hidden}
+.infobox>div{display:flex;gap:16px;padding:24px 28px;align-items:flex-start}
+.infobox>div+div{border-left:1px solid var(--line)}
+.infobox .ic{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--s3);border:1px solid var(--line)}
+.infobox b{display:block;font-size:15px;margin-bottom:2px}
+.infobox p{color:var(--muted);font-size:13.5px;line-height:1.5}
+
+/* PRICING */
+.toggle{display:inline-flex;padding:6px;border-radius:999px;border:1px solid var(--line);background:hsl(var(--hue) calc(65% * var(--k)) 7% / .8);margin:30px 0 46px;gap:4px}
+.toggle button{padding:12px 30px;border-radius:999px;font-size:14px;font-weight:600;color:var(--muted);transition:.3s;display:flex;align-items:center;gap:10px}
+.toggle button.on{background:linear-gradient(180deg,hsl(var(--hue) calc(60% * var(--k)) 17%),hsl(var(--hue) calc(60% * var(--k)) 10%));color:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.new{font-size:10px;font-weight:800;background:var(--cyan);color:var(--on);padding:2px 8px;border-radius:999px}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:stretch}
+.plan{position:relative;border:1px solid var(--line);border-radius:20px;background:var(--card);padding:26px 22px;display:flex;flex-direction:column;transition:.3s}
+.plan:hover{transform:translateY(-5px);border-color:rgba(var(--rgb),.5)}
+.plan.pop{border-color:rgba(var(--rgb),.65);box-shadow:0 0 60px -22px var(--cyan-glow)}
+.plan .badge{position:absolute;top:-12px;right:18px;font-family:var(--m);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;background:var(--cyan);color:var(--on);padding:4px 12px;border-radius:999px}
+.plan .badge.pu{background:var(--purple);color:var(--on)}
+.plan .eb{font-family:var(--m);font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.plan h3{font-size:25px;font-weight:800;letter-spacing:-.03em;margin:8px 0 6px}
+.plan .ds{font-size:13px;color:var(--muted);line-height:1.5;min-height:58px}
+.plan .pr{font-family:var(--h);font-size:40px;font-weight:800;letter-spacing:-.04em;margin:16px 0 16px}
+.plan .pr small{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0;margin-left:6px}
+.plan .btn{height:44px;width:100%;font-size:14px}
+.plan .box{margin:20px 0 16px;border:1px solid var(--line);border-radius:14px;padding:14px;background:hsl(var(--hue) calc(65% * var(--k)) 7% / .7)}
+.plan .box h5{font-family:var(--m);font-size:10px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.plan .box li{list-style:none;font-size:13px;display:flex;gap:8px;margin-bottom:6px;color:#dfe9ec}
+.plan .box li::before{content:"✓";color:var(--cyan);font-weight:700}
+.plan .add h5{font-family:var(--m);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.plan .add li{list-style:none;font-size:13px;display:flex;gap:10px;align-items:center;margin-bottom:9px;color:#ced9de}
+.plan .add li svg{width:15px;height:15px}
+.note{margin-top:30px;text-align:center;color:var(--muted);font-size:13px}
+
+/* PRIVACY */
+.priv{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+.shield{position:relative;aspect-ratio:1.15;display:grid;place-items:center}
+.shield::before{content:"";position:absolute;inset:6% 6%;border-radius:50%;background:radial-gradient(circle,rgba(var(--rgb),.28),transparent 66%);filter:blur(10px)}
+.shield .ringo{position:absolute;left:50%;top:46%;width:96%;aspect-ratio:2.4;border:1.5px solid rgba(var(--rgb),.5);border-radius:50%;transform:translate(-50%,-50%) rotate(-12deg);box-shadow:0 0 30px rgba(var(--rgb),.25)}
+.shield .ringo.b{border-color:hsl(calc(var(--hue) + 110) calc(100% * var(--k)) 70% / .55);transform:translate(-50%,-50%) rotate(10deg);width:86%}
+.shield svg{position:relative;width:62%;filter:drop-shadow(0 0 28px rgba(var(--rgb),.7))}
+.shield img{position:absolute;left:50%;top:46%;width:17%;transform:translate(-50%,-50%);filter:drop-shadow(0 0 12px rgba(var(--rgb),.9))}
+.pcards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:-30px;position:relative;z-index:3}
+.pcard{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:26px 22px;backdrop-filter:blur(6px);transition:.3s}
+.pcard:hover{border-color:var(--cyan);transform:translateY(-4px)}
+.pcard h4{font-size:16px;font-weight:700;margin:16px 0 6px}
+.pcard p{font-size:13.5px;color:var(--muted);line-height:1.55}
+
+/* FAQ */
+.faq-list{max-width:920px;margin:0 auto;display:grid;gap:14px}
+.faq{border:1px solid var(--line);border-radius:18px;background:var(--card);transition:.3s;overflow:hidden}
+.faq.open{border-color:rgba(var(--rgb),.55)}
+.faq>button{width:100%;display:flex;align-items:center;gap:18px;padding:24px 28px;text-align:left;font-family:var(--h);font-size:20px;font-weight:700;letter-spacing:-.02em}
+.faq .n{font-family:var(--m);font-size:13px;color:var(--cyan);font-weight:500}
+.faq .pl{margin-left:auto;font-size:26px;color:var(--cyan);transition:.3s;line-height:1}
+.faq.open .pl{transform:rotate(45deg)}
+.faq .an{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.faq .an div{padding:0 28px 26px 68px}
+.faq .an code{display:block;font-family:var(--m);font-size:13px;color:var(--cyan);margin-bottom:10px;opacity:.9}
+.faq .an p{color:hsl(var(--hue) calc(14% * var(--k)) 70%);font-size:15px;line-height:1.75}
+
+/* CONTACT + FOOTER */
+.cta{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;border:1px solid var(--line);border-radius:32px;padding:60px;position:relative;overflow:hidden;
+  background:radial-gradient(70% 90% at 0% 0%,rgba(var(--rgb),.22),transparent 60%),var(--card)}
+.cta .logo-big{height:90px;width:auto;margin-bottom:26px;filter:drop-shadow(0 0 14px rgba(var(--rgb),.5))}
+.form{display:grid;gap:12px}
+.form input,.form select,.form textarea{width:100%;padding:16px 18px;border-radius:12px;border:1px solid var(--line);background:hsl(var(--hue) calc(70% * var(--k)) 4% / .7);color:var(--text);font:inherit;font-size:15px;outline:none;transition:.25s}
+.form select option{background:var(--s4)}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(var(--rgb),.12)}
+.form textarea{min-height:120px;resize:vertical}
+.form .btn{width:100%}
+.fnote{font-size:13px;color:var(--cyan);min-height:18px;text-align:center}
+
+footer{border-top:1px solid var(--line-soft);margin-top:110px;padding:70px 0 34px;position:relative;overflow:hidden}
+footer::before{content:"";position:absolute;left:50%;top:0;width:70%;height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.fgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px}
+.fgrid p{color:var(--muted);font-size:14.5px;margin:18px 0 14px;max-width:300px}
+.fgrid h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:16px}
+.fgrid a{display:block;color:#d6e2e6;font-size:14.5px;margin-bottom:10px;transition:.2s}
+.fgrid a:hover{color:var(--cyan)}
+.fbot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:13px;border-top:1px solid var(--line-soft);padding-top:26px}
+
+/* CHAT */
+.chat-fab{position:fixed;right:22px;bottom:22px;z-index:200;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--cyan-2));display:grid;place-items:center;box-shadow:0 10px 36px -6px rgba(var(--rgb),.6);transition:.25s}
+.chat-fab:hover{transform:scale(1.08)}
+.chat-fab svg{width:30px;height:30px;stroke:#fff;fill:#fff}
+.chat{position:fixed;right:22px;bottom:100px;z-index:200;width:min(380px,calc(100vw - 32px));height:min(560px,calc(100vh - 130px));border-radius:22px;border:1px solid var(--line);background:hsl(var(--hue) calc(70% * var(--k)) 4% / .97);backdrop-filter:blur(16px);display:none;flex-direction:column;box-shadow:0 30px 80px -20px rgba(0,0,0,.8),0 0 60px -20px var(--cyan-glow);overflow:hidden}
+.chat.open{display:flex}
+.chat-h{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line-soft)}
+.chat-h img{height:30px}
+.chat-h b{font-size:14px}
+.chat-h button{margin-left:auto;font-size:22px;color:#d6e6ea;opacity:.8}
+.chat-b{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;padding:14px 16px;border-radius:16px;font-size:14px;line-height:1.55}
+.msg.bot{background:hsl(var(--hue) calc(20% * var(--k)) 12%);border-bottom-left-radius:4px}
+.msg.me{background:linear-gradient(135deg,var(--cyan),var(--cyan-2));color:var(--on);align-self:flex-end;border-bottom-right-radius:4px;font-weight:500}
+.msg ul{margin:8px 0 0 18px}
+.qr{display:flex;gap:8px;flex-wrap:wrap}
+.qr button{padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-size:13px;color:var(--cyan);transition:.2s}
+.qr button:hover{background:rgba(var(--rgb),.12)}
+.chat-f{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line-soft)}
+.chat-f input{flex:1;padding:13px 16px;border-radius:12px;border:1px solid var(--line);background:hsl(var(--hue) calc(20% * var(--k)) 8%);color:var(--text);font:inherit;font-size:14px;outline:none}
+.chat-f input:focus{border-color:var(--cyan)}
+.chat-f button{width:46px;border-radius:12px;background:var(--cyan-2);display:grid;place-items:center}
+.chat-f button svg{width:18px;height:18px;stroke:var(--on);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+
+/* PROJECT DETAIL MODAL */
+.pm{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:24px;background:hsl(var(--hue) calc(70% * var(--k)) 3% / .86);backdrop-filter:blur(10px)}
+.pm.open{display:flex;animation:pmin .3s ease}
+@keyframes pmin{from{opacity:0}to{opacity:1}}
+.pm-box{position:relative;width:min(1040px,100%);max-height:calc(100vh - 48px);overflow:auto;border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,hsl(var(--hue) calc(55% * var(--k)) 9%),hsl(var(--hue) calc(60% * var(--k)) 5%));box-shadow:0 40px 120px -30px rgba(0,0,0,.9),0 0 80px -30px var(--cyan-glow);display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+.pm-img{position:relative;min-height:420px;background:var(--s4)}
+.pm-img .sc{position:absolute;inset:0}
+.pm-img svg{width:100%;height:100%}
+.pm-body{padding:38px 34px 30px;display:flex;flex-direction:column}
+.pm-cat{font-family:var(--m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+.pm-body h3{font-size:clamp(28px,3.2vw,40px);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin:10px 0 14px}
+.pm-body>p{color:var(--muted);font-size:15px;line-height:1.7}
+.pm-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}
+.pm-stats div{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(var(--rgb),.04)}
+.pm-stats small{display:block;font-family:var(--m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pm-stats b{display:block;font-size:15px;margin-top:2px}
+.pm-feat{list-style:none;display:grid;gap:8px;margin-bottom:24px}
+.pm-feat li{display:flex;gap:10px;font-size:14px;color:#dfe9ec}
+.pm-feat li::before{content:"✓";color:var(--cyan);font-weight:700}
+.pm-act{margin-top:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pm-nav{margin-left:auto;display:flex;gap:8px}
+.pm-nav button,.pm-x{width:42px;height:42px;border-radius:50%;border:1px solid var(--cyan-2);display:grid;place-items:center;transition:.25s;background:hsl(var(--hue) calc(65% * var(--k)) 7% / .8)}
+.pm-nav button:hover,.pm-x:hover{background:rgba(var(--rgb),.15);border-color:var(--cyan)}
+.pm-x{position:absolute;top:16px;right:16px;z-index:5;font-size:18px;color:var(--cyan)}
+
+/* PROJECT IMAGE GALLERY (inside modal) */
+.proj .sc img{width:100%;height:100%;object-fit:cover}
+.pm-img.has-gal{min-height:560px;background:#0a0a0a}
+.pm-gal{position:absolute;inset:0;display:flex;flex-direction:column}
+.pm-gal .stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:14px}
+.pm-gal .stage img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:opacity .25s}
+.pm-gal .stage img.fade{opacity:0}
+.gn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.55);border:1px solid var(--cyan-2);color:#fff;z-index:3;font-size:16px;transition:.2s}
+.gn:hover{background:rgba(0,0,0,.85);border-color:var(--cyan)}
+.gn.gp{left:12px}.gn.gx{right:12px}
+.gcap{position:absolute;left:14px;right:14px;bottom:14px;padding:30px 14px 10px;font-size:13px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.8));border-radius:0 0 8px 8px;pointer-events:none}
+.gcount{position:absolute;top:22px;left:22px;font-family:var(--m);font-size:11px;padding:4px 12px;border-radius:999px;background:rgba(0,0,0,.6);border:1px solid var(--line)}
+.strip{display:flex;gap:8px;padding:10px 14px 14px;overflow-x:auto}
+.strip img{width:76px;height:52px;flex:none;object-fit:cover;border-radius:6px;cursor:pointer;opacity:.5;border:2px solid transparent;transition:.2s}
+.strip img:hover{opacity:.9}
+.strip img.on{opacity:1;border-color:var(--cyan)}
+@media (max-width:820px){.pm-img.has-gal{aspect-ratio:auto;min-height:440px}}
+
+@media (max-width:820px){.pm{padding:0;align-items:flex-end}.pm-box{grid-template-columns:1fr;border-radius:24px 24px 0 0;max-height:94vh}.pm-img{min-height:0;aspect-ratio:16/10}.pm-body{padding:26px 22px}}
+
+/* RESPONSIVE */
+@media (max-width:1060px){
+  .pgrid{grid-template-columns:repeat(2,1fr)}
+  .pcards{grid-template-columns:repeat(2,1fr)}
+  .gal{grid-template-columns:repeat(3,1fr)}
+  .pgrid3{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  section{padding:80px 0}
+  .links,.nav-in>.btn{display:none}
+  .burger{display:grid}
+  .hero-grid,.split,.split.eq,.split.narrow,.cine,.priv,.cta{grid-template-columns:minmax(0,1fr)}
+  .hero-grid{min-height:auto}
+  .hero .sub{max-width:none}
+  .orbit{margin-top:20px}
+  .cta{padding:34px 22px}
+  .fgrid{grid-template-columns:1fr 1fr}
+  .cine .rt{order:-1}
+  .pcards{margin-top:0}
+  .promo{padding:12px 44px 12px 14px}
+  .promo .sep,.promo .t{display:none}
+}
+@media (max-width:620px){
+  .pgrid,.pgrid3,.pcards,.thumbs,.infobox{grid-template-columns:1fr}
+  .infobox>div+div{border-left:0;border-top:1px solid var(--line)}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .fgrid{grid-template-columns:1fr}
+  .cf{height:380px}.cf-card{height:330px}
+  .faq>button{font-size:17px;padding:20px}
+  .faq .an div{padding:0 20px 22px}
+  .orbit{min-height:360px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= PROMO BAR ================= -->
+<div class="promo" id="promo">
+  <div class="promo-in">
+    <b>Free design consultation · Limited slots</b>
+    <i class="sep"></i>
+    <span class="t">Book a 30-minute call and get a clear design direction for your space.</span>
+    <a href="#contact" class="btn-cy">Book a call →</a>
+  </div>
+  <button class="promo-x" id="promoX" aria-label="Close banner">✕</button>
+</div>
+
+<!-- ================= NAV ================= -->
+<header class="nav">
+  <div class="wrap nav-in">
+    <a href="#home" class="brand">
+      <img data-logo alt="Arketz logo" />
+      <span><b>ARKETZ</b><small>Design Studio</small></span>
+    </a>
+    <nav class="links">
+      <a href="#features">Features</a>
+      <a href="#services">Services</a>
+      <a href="#projects">Projects</a>
+      <a href="#software">Software</a>
+      <a href="#pricing">Packages</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a href="#contact" class="btn btn-out sm">Contact us</a>
+    <button class="burger" id="burger" aria-label="Menu"><i></i></button>
+  </div>
+</header>
+<div class="mmenu" id="mmenu">
+  <a href="#features">Features</a><a href="#services">Services</a><a href="#projects">Projects</a>
+  <a href="#software">Software</a><a href="#pricing">Packages</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+</div>
+
+<main id="home">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="rv">
+      <h1>Design Spaces for Visionaries Who <span class="cy">Expect More</span></h1>
+      <p class="sub">Arketz Design Studio turns sketches and concepts into striking architecture, interiors and visualizations — faster, sharper and always true to your vision.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn btn-fill"><svg class="ico" style="stroke:var(--on)" viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 20h16"/></svg>Start a project</a>
+        <a href="#projects" class="btn btn-out">View work</a>
+      </div>
+    </div>
+
+    <div class="orbit rv" id="orbit">
+      <div class="ring r3"></div><div class="ring r2"></div><div class="ring r1"></div>
+      <canvas id="orbitCanvas"></canvas>
+      <div class="core"><img data-logo alt="Arketz" /></div>
+      <div class="node n1"><div class="bubble" data-scene="cabin"></div><span>Landscape</span></div>
+      <div class="node n2"><div class="bubble" data-scene="interior"></div><span>Interior</span></div>
+      <div class="node n3"><div class="bubble" data-scene="building"></div><span>Architecture</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES + BEFORE/AFTER ================= -->
+<section id="features">
+  <div class="wrap split">
+    <div class="rv">
+      <h2 class="h2">Bring your ideas<br />to <span class="cy">realistic life</span></h2>
+      <p class="sub">Arketz helps homeowners, developers and brands turn concepts into striking spaces with speed, precision and ease.</p>
+      <div class="rows">
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div><div><h4>Lightning fast</h4><p>First design concepts in days, not weeks.</p></div></div>
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg></div><div><h4>True to design</h4><p>Accurate results that stay faithful to your vision.</p></div></div>
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 10v4M8 12h3M11 10v4M14 10l3 4m0-4-3 4"/></svg></div><div><h4>Up to 8K visuals</h4><p>Native 4K renders with upscaling up to 8K resolution.</p></div></div>
+      </div>
+    </div>
+    <div class="rv">
+      <div class="compare" id="compare">
+        <div class="lay after" id="cmpAfter"></div>
+        <div class="lay before" id="cmpBefore"></div>
+        <span class="tg l">Sketch</span><span class="tg r">Render</span>
+        <div class="handle" id="cmpHandle" role="slider" aria-label="Compare sketch and render" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0"><i><svg viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M15 7l5 5-5 5"/></svg></i></div>
+      </div>
+      <div class="thumbs" id="cmpThumbs"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERVICES CAROUSEL ================= -->
+<section id="services">
+  <div class="wrap">
+    <div class="head center rv">
+      <h2 class="h2">Best-in-Class <span class="cy">Design Services</span></h2>
+      <p class="sub">Arketz combines architecture, interiors and visualization expertise so every project meets the highest standard of quality and detail.</p>
+    </div>
+    <div class="rv">
+      <div class="cc" id="ccServices"><div class="cc-track"></div></div>
+      <div class="dots" id="ccServicesDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WALKTHROUGH ================= -->
+<section id="walkthrough">
+  <div class="wrap">
+    <div class="cine">
+      <div class="rv">
+        <div class="frame" id="cineFrame"><span class="chip-label" id="cineLabel">Interior concept</span></div>
+      </div>
+      <div class="rt rv">
+        <h2 class="h2">Create <span class="cy">cinematic</span> walkthroughs</h2>
+        <p class="sub">Let clients experience a space before it exists — professional presentations at the highest quality.</p>
+        <div class="rows">
+          <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13M9 21v-6h6v6"/></svg></div><div><h4>Architectural animation</h4><p>Bring interiors, exteriors and complete concepts to life.</p></div></div>
+          <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11V8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3M2 13a2 2 0 0 1 4 0v2h12v-2a2 2 0 0 1 4 0v5H2zM5 18v2M19 18v2"/></svg></div><div><h4>Interior presentations</h4><p>Materials, lighting and furniture shown exactly as they will feel.</p></div></div>
+          <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></div><div><h4>Advanced controls</h4><p>Define camera paths, day or night lighting and export in 1080p up to 4K.</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="gal rv" id="cineGal"></div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects">
+  <div class="wrap">
+    <div class="head rv">
+      <h2 class="h2">Selected <span class="cy">projects</span></h2>
+      <p class="sub">A look inside recent work — from first sketch to finished space. Replace these placeholder cards with your own photos.</p>
+      <div class="filters" id="filters"></div>
+    </div>
+    <div class="pgrid3 rv" id="projGrid"></div>
+  </div>
+</section>
+
+<!-- ================= BUILD WITHOUT LIMITS ================= -->
+<section id="limits">
+  <div class="wrap split eq">
+    <div class="rv">
+      <h2 class="h2">Create without <span class="cy">limits</span></h2>
+      <p class="sub">Keep every idea moving — from the first spark to the final detail — with a workflow built for speed, scale and creative control.</p>
+      <div class="rows">
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div><div><h4>Maximum design speed</h4><p>Speed is our priority — every project starts immediately, so your creative flow never has to wait.</p></div></div>
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 12c-2-3-4-4-6-4a4 4 0 0 0 0 8c2 0 4-1 6-4zm0 0c2 3 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1-6 4z"/></svg></div><div><h4>Unlimited design directions</h4><p>Explore as many ideas at once as you need — no one-at-a-time bottlenecks.</p></div></div>
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1 1-1.5 3-1.5s3 .5 3 1.7-1 1.5-3 2-3 .8-3 1.8 1 1.7 3 1.7 3-.5 3-1.5"/></svg></div><div><h4>Affordable by design</h4><p>Create more for less with competitive pricing and no hidden costs.</p></div></div>
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></svg></div><div><h4>Advanced detailing</h4><p>Refine selected areas, control composition and perfect every detail.</p></div></div>
+      </div>
+    </div>
+    <div class="rv"><div class="frame" style="aspect-ratio:1/1.08"><div data-scene="fireplace"></div></div></div>
+  </div>
+</section>
+
+<!-- ================= CONTROL EVERY DETAIL ================= -->
+<section id="detail">
+  <div class="wrap split narrow">
+    <div class="rv"><div class="frame" style="aspect-ratio:4/4.9;max-width:520px;margin-inline:auto"><div data-scene="building"></div><span class="chip-label">Facade study</span></div></div>
+    <div class="rv">
+      <h2 class="h2">Control every <span class="cy">angle</span></h2>
+      <p class="sub">Turn a simple 3D model into photorealistic views, walkthroughs and cinematic shots. Your scene, your direction.</p>
+      <div class="rows">
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg></div><div><h4>Explore every perspective</h4><p>Find your best angle and explore materials in photorealistic detail.</p></div></div>
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M6 21V3h12v18M3 21h18M14 12h.01"/></svg></div><div><h4>Walk through interiors</h4><p>Create immersive walkthroughs from a basic model and a few reference images.</p></div></div>
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg></div><div><h4>Shape your scene</h4><p>Move objects, refine the composition and see changes come to life.</p></div></div>
+        <div class="row"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m22 8-6 4 6 4z"/></svg></div><div><h4>Direct every shot</h4><p>Create cinematic camera movements with a simple 3D setup.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOFTWARE ================= -->
+<section id="software">
+  <div class="wrap">
+    <div class="head center rv">
+      <h2 class="h2">Integrate Your <span class="cy">Favorite Apps</span></h2>
+      <p class="sub">We work directly inside the design tools you already use, so files, models and revisions flow without friction.</p>
+    </div>
+    <div class="rv">
+      <div class="cc" id="ccSoft"><div class="cc-track"></div></div>
+      <div class="dots" id="ccSoftDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORKFLOW ================= -->
+<section id="workflow">
+  <div class="wrap">
+    <div class="head center rv">
+      <h2 class="h2">One workflow.<br /><span class="cy">More creative range.</span></h2>
+      <p class="sub">Move through real Arketz project stages and see the work behind every result.</p>
+    </div>
+    <div class="cf rv" id="cf">
+      <button class="arrow l" id="cfPrev" aria-label="Previous"><svg class="ico" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+      <button class="arrow r" id="cfNext" aria-label="Next"><svg class="ico" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
+    <div class="dots" id="cfDots"></div>
+    <div class="infobox rv" id="cfInfo"></div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="head center rv">
+      <h2 class="h2">Flexible packages for <span class="cy">every project</span></h2>
+      <p class="sub" style="max-width:none"><b style="color:#fff">Clear scope. Clear pricing.</b><br />Choose the level of support that fits your space.</p>
+      <div class="toggle" id="toggle">
+        <button class="on" data-k="residential">Residential</button>
+        <button data-k="commercial">Commercial <span class="new">NEW</span></button>
+      </div>
+    </div>
+    <div class="pgrid rv" id="plans"></div>
+    <p class="note">Prices shown are placeholders — edit them in the <code>PLANS</code> object in the script at the bottom of this file.</p>
+  </div>
+</section>
+
+<!-- ================= COMMITMENT ================= -->
+<section id="privacy">
+  <div class="wrap">
+    <div class="priv">
+      <div class="rv">
+        <h2 class="h2">Your vision.<br /><span class="cy">Our commitment.</span></h2>
+        <p class="sub">Arketz is built on trust. Your plans, your ideas and your projects are always protected and always yours.</p>
+      </div>
+      <div class="shield rv">
+        <div class="ringo"></div><div class="ringo b"></div>
+        <svg viewBox="0 0 200 230" fill="none">
+          <path d="M100 8 20 38v68c0 52 34 93 80 116 46-23 80-64 80-116V38z" style="fill:hsl(var(--hue) calc(70% * var(--k)) 12% / .6);stroke:var(--cyan);stroke-width:3"/>
+          <path d="M100 26 36 50v56c0 43 28 77 64 97 36-20 64-54 64-97V50z" style="stroke:rgba(var(--rgb),.45);stroke-width:1.4"/></svg>
+        <img data-logo alt="" />
+      </div>
+    </div>
+    <div class="pcards">
+      <div class="pcard rv"><svg class="ico" viewBox="0 0 24 24"><path d="M3 9c3-2 6-2 9 0 3-2 6-2 9 0v3c0 3-3 5-5 5-2 0-3-1-4-2-1 1-2 2-4 2-2 0-5-2-5-5z"/></svg><h4>Confidential projects</h4><p>NDAs on request. Your files, drawings and ideas stay private until you choose to share them.</p></div>
+      <div class="pcard rv"><svg class="ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><h4>Your designs stay yours</h4><p>You receive full rights to the final drawings, models and visuals once the project is complete.</p></div>
+      <div class="pcard rv"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg><h4>Built to standards</h4><p>Designs follow local building regulations and safe, proven construction practice.</p></div>
+      <div class="pcard rv"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><h4>Transparency first</h4><p>Clear scope, timelines and pricing — with regular updates and full control over decisions.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq">
+  <div class="wrap">
+    <div class="head center rv">
+      <h2 class="h2"><span class="cy">&lt;/&gt;</span> FAQ</h2>
+      <p class="sub">Need clarity? Start here. Didn't find your answer? <a href="#contact" class="cy">Contact us.</a></p>
+    </div>
+    <div class="faq-list rv" id="faqList"></div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="cta rv">
+      <div>
+        <img class="logo-big" data-logo alt="Arketz Design Studio" />
+        <h2 class="h2">Let's build something <span class="cy">remarkable</span></h2>
+        <p class="sub">Tell us about your space and we'll reply within one business day with next steps.</p>
+      </div>
+      <form class="form" id="form">
+        <input name="name" type="text" placeholder="Your name" required />
+        <input name="email" type="email" placeholder="Email address" required />
+        <select name="type" aria-label="Project type">
+          <option>Residential design</option><option>Commercial design</option><option>Interior design</option><option>3D visualization</option><option>Renovation</option>
+        </select>
+        <textarea name="msg" placeholder="Tell us about your project…" required></textarea>
+        <button class="btn btn-fill" type="submit">Send message →</button>
+        <div class="fnote" id="fnote"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a href="#home" class="brand"><img data-logo alt="" /><span><b>ARKETZ</b><small>Design Studio</small></span></a>
+        <p>Your ideas, designed beautifully.</p>
+        <a href="mailto:hello@yourstudio.com">hello@yourstudio.com</a>
+      </div>
+      <div><h5>Studio</h5><a href="#features">Features</a><a href="#services">Services</a><a href="#software">Software</a><a href="#pricing">Packages</a><a href="#faq">FAQ</a></div>
+      <div><h5>Work</h5><a href="#projects">Projects</a><a href="#walkthrough">Walkthroughs</a><a href="#workflow">Process</a></div>
+      <div><h5>Connect</h5><a href="#">Instagram</a><a href="#">LinkedIn</a><a href="#">YouTube</a><a href="#">Behance</a></div>
+    </div>
+    <div class="fbot"><span>© <span id="yr"></span> Arketz Design Studio. All rights reserved.</span><span><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms &amp; Conditions</a></span></div>
+  </div>
+</footer>
+
+
+<!-- ================= PROJECT DETAIL MODAL ================= -->
+<div class="pm" id="pm" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+  <div class="pm-box">
+    <button class="pm-x" id="pmX" aria-label="Close">✕</button>
+    <div class="pm-img" id="pmImg"></div>
+    <div class="pm-body">
+      <span class="pm-cat" id="pmCat"></span>
+      <h3 id="pmTitle"></h3>
+      <p id="pmDesc"></p>
+      <div class="pm-stats" id="pmStats"></div>
+      <ul class="pm-feat" id="pmFeat"></ul>
+      <div class="pm-act">
+        <a href="#contact" class="btn btn-fill sm" id="pmCta">Start a similar project →</a>
+        <div class="pm-nav">
+          <button id="pmPrev" aria-label="Previous project"><svg class="ico" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+          <button id="pmNext" aria-label="Next project"><svg class="ico" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CHAT WIDGET ================= -->
+<button class="chat-fab" id="chatFab" aria-label="Chat with Arketz"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4z"/></svg></button>
+<div class="chat" id="chat">
+  <div class="chat-h"><img data-logo alt="" /><b>Arketz Studio Assistant</b><button id="chatX" aria-label="Close chat">✕</button></div>
+  <div class="chat-b" id="chatB"></div>
+  <form class="chat-f" id="chatF"><input id="chatI" placeholder="How do I start my project?" autocomplete="off" /><button type="submit" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form>
+</div>
+
+<script>
+/* Logo is embedded so index.html works on its own. */
+const LOGO='data:image/png;base64,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';
+document.querySelectorAll('img[data-logo]').forEach(i=>i.src=LOGO);
+document.getElementById('favicon').href=LOGO;
+
+/* ===================================================================
+   CONFIG — edit these
+   =================================================================== */
+const CURRENCY = '$';
+const CONTACT_EMAIL = 'hello@yourstudio.com';
+const ACCENT_OVERRIDE = '';
+
+/* ===================================================================
+   THEME FROM LOGO
+   =================================================================== */
+let ACC = '232,236,238';
+function rgb2hsl(r,g,b){ r/=255;g/=255;b/=255; const mx=Math.max(r,g,b), mn=Math.min(r,g,b), l=(mx+mn)/2; let h=0,s=0;
+  if(mx!==mn){ const d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn);
+    h = mx===r ? (g-b)/d+(g<b?6:0) : mx===g ? (b-r)/d+2 : (r-g)/d+4; h*=60; }
+  return [h,s,l]; }
+function hsl2rgb(h,s,l){ h/=360; const f=(p,q,t)=>{ if(t<0)t+=1; if(t>1)t-=1; return t<1/6?p+(q-p)*6*t : t<1/2?q : t<2/3?p+(q-p)*(2/3-t)*6 : p; };
+  if(!s){ const v=Math.round(l*255); return [v,v,v]; }
+  const q=l<.5?l*(1+s):l+s-l*s, p=2*l-q;
+  return [f(p,q,h+1/3),f(p,q,h),f(p,q,h-1/3)].map(v=>Math.round(v*255)); }
+function setTheme(r,g,b){
+  let [h,s]=rgb2hsl(r,g,b);
+  const root=document.documentElement.style;
+  if(s<.2){
+    root.setProperty('--hue',Math.round(h)); root.setProperty('--sat','0%'); root.setProperty('--k','0');
+    root.setProperty('--L','88%'); root.setProperty('--rgb','232,236,238'); ACC='232,236,238';
+    document.getElementById('themeColor').content='#070808'; return;
+  }
+  s=Math.min(1,Math.max(s,.55));
+  const [R,G,B]=hsl2rgb(h,s,.56);
+  root.setProperty('--hue',Math.round(h));
+  root.setProperty('--sat',Math.round(s*100)+'%');
+  root.setProperty('--k','1'); root.setProperty('--L','56%');
+  root.setProperty('--rgb',R+','+G+','+B);
+  ACC=R+','+G+','+B;
+  document.getElementById('themeColor').content='rgb('+hsl2rgb(h,.7,.03).join(',')+')';
+}
+(function(){
+  const hex=ACCENT_OVERRIDE.replace('#','');
+  if(/^[0-9a-f]{6}$/i.test(hex)){ setTheme(parseInt(hex.slice(0,2),16),parseInt(hex.slice(2,4),16),parseInt(hex.slice(4,6),16)); return; }
+  const im=new Image();
+  im.onload=()=>{
+    try{
+      const c=document.createElement('canvas'), S=64; c.width=c.height=S;
+      const x=c.getContext('2d'); x.drawImage(im,0,0,S,S);
+      const d=x.getImageData(0,0,S,S).data; let sx=0,sy=0,w=0;
+      for(let i=0;i<d.length;i+=4){
+        const a=d[i+3]/255; if(a<.5) continue;
+        const [h,s,l]=rgb2hsl(d[i],d[i+1],d[i+2]);
+        if(s<.25||l<.18||l>.9) continue;
+        const wt=s*(1-Math.abs(l-.55))*a;
+        sx+=Math.cos(h*Math.PI/180)*wt; sy+=Math.sin(h*Math.PI/180)*wt; w+=wt;
+      }
+      if(w<1) return;
+      let h=Math.atan2(sy,sx)*180/Math.PI; if(h<0)h+=360;
+      const [r,g,b]=hsl2rgb(h,1,.55); setTheme(r,g,b);
+    }catch(e){}
+  };
+  im.src=LOGO;
+})();
+
+const PLANS = {
+  residential: [
+    {eb:'EXPLORE ARKETZ', name:'Consultation', ds:'A first conversation to turn your ideas into a clear direction.', price:'0', unit:'30-min call', cta:'Book a call', outline:true,
+     box:['Free design consultation','Style & budget direction'], add:['Space review','Next-step roadmap']},
+    {eb:'FOR SINGLE SPACES', name:'Concept', ds:'A balanced concept package for one room or small space.', price:'499', unit:'/ room', cta:'Enquire', outline:true,
+     box:['Mood board & layout','2 photoreal renders'], add:['2 revision rounds','Material suggestions']},
+    {eb:'FOR FULL HOMES', name:'Design', ds:'Complete design for homes that need depth and detail.', price:'1,499', unit:'/ project', cta:'Enquire', badge:'Most popular', pop:true,
+     box:['Full concept + 3D model','Walkthrough video'], add:['3 revision rounds','Priority support','Construction drawings']},
+    {eb:'END TO END', name:'Turnkey', ds:'From first sketch to handover with us managing everything.', price:'Custom', unit:'', cta:'Get a quote', badge:'Full service', purple:true, outline:true,
+     box:['Design + site supervision','Vendor coordination'], add:['Unlimited revisions*','Highest-priority support','Project management']}
+  ],
+  commercial: [
+    {eb:'EXPLORE ARKETZ', name:'Consultation', ds:'Discuss your brand, space and goals with our team.', price:'0', unit:'45-min call', cta:'Book a call', outline:true,
+     box:['Free consultation','Feasibility overview'], add:['Brief review','Next-step roadmap']},
+    {eb:'FOR SMALL FIT-OUTS', name:'Concept', ds:'A strong concept for shops, studios and small offices.', price:'1,299', unit:'/ project', cta:'Enquire', outline:true,
+     box:['Layout & mood board','3 photoreal renders'], add:['2 revision rounds','Material palette']},
+    {eb:'FOR FULL FIT-OUTS', name:'Design', ds:'Full design for offices, cafés, showrooms and more.', price:'3,999', unit:'/ project', cta:'Enquire', badge:'Most popular', pop:true,
+     box:['Full concept + 3D model','Walkthrough video'], add:['3 revision rounds','Priority support','Construction drawings']},
+    {eb:'END TO END', name:'Turnkey', ds:'Design, documentation and delivery under one roof.', price:'Custom', unit:'', cta:'Get a quote', badge:'Full service', purple:true, outline:true,
+     box:['Design + site supervision','Contractor coordination'], add:['Unlimited revisions*','Highest-priority support','Project management']}
+  ]
+};
+
+const FAQS = [
+  ['Who does Arketz work with?','// One studio for every kind of space.','We work with homeowners, developers, architects, cafés, retailers and brands — anyone who wants thoughtful, beautifully resolved architecture and interiors.'],
+  ['How long does a project take?','// Fast concepts, careful delivery.','A first concept is usually ready within a few days. Full design packages typically take a few weeks depending on size, complexity and how quickly feedback comes in.'],
+  ['Do I need to be in the same city?','// Remote-friendly workflow.','No. Consultations, reviews and presentations happen online, and we coordinate with local contractors or visit the site when the project needs it.'],
+  ['Is my project information private?','// Yes. Your ideas stay yours.','Projects are confidential by default and we are happy to sign an NDA before we begin. You receive full rights to the final deliverables.'],
+  ['What do I need to get started?','// A short brief is enough.','Share a few photos or plans, your budget range and the style you love. We will take care of the rest and guide you step by step.'],
+  ['What can Arketz create for me?','// From a first idea to a finished space.','Architecture and interior design, space planning, renovation, landscape concepts, photorealistic 3D renders, cinematic walkthroughs and full documentation.']
+];
+
+const SERVICES = [
+  {t:'Architecture', s:'Homes & buildings', i:'building'},
+  {t:'Interior Design', s:'Spaces that feel right', i:'sofa'},
+  {t:'3D Visualization', s:'Photoreal renders', i:'cube'},
+  {t:'Landscape', s:'Outdoor environments', i:'tree'},
+  {t:'Space Planning', s:'Layouts that work', i:'layout'},
+  {t:'Renovation', s:'Transform what exists', i:'hammer'},
+  {t:'Walkthroughs', s:'Cinematic animation', i:'film'},
+  {t:'Documentation', s:'Drawings & details', i:'edit'}
+];
+const SOFTWARE = [
+  ['Revit','BIM'],['AutoCAD','2D Drafting'],['ArchiCAD','BIM'],['SketchUp','3D Modeling'],['Rhino','3D Design'],
+  ['3ds Max','Modeling & Rendering'],['Blender','3D Creation'],['Lumion','Real-time Rendering'],['Unreal Engine','Real-time 3D'],['Photoshop','Post-production']
+];
+const CINE = [
+  ['interior','Interior concept'],['living','Interior presentation'],['building','Exterior presentation'],
+  ['cabin','Retreat cabin'],['fireplace','Detail study'],['plan','Floor plan']
+];
+
+/* ===================================================================
+   PROJECTS — Film City uses real photos from images/film-city/
+   =================================================================== */
+const FC = 'images/film-city/';
+const PROJECTS = [
+  {t:'Film City', m:'Thesis · Master Plan · 2026', c:'Architecture', s:'building',
+   cover: FC+'02-aerial-view.jpg',
+   d:'A Film City master plan developed as my architecture thesis, set in Sector 21, International Film City, Uttar Pradesh. The 150-acre site supports film production, cinematic education and cultural tourism, with themed shooting environments that double as visitor attractions.',
+   i:{Location:'Uttar Pradesh, India',Year:'2026',Area:'607,028 sq m',Status:'Thesis project'},
+   f:['Film Studio Zone: sets, sound stages and backlots','Film Institute Zone: learning hub for filmmaking','Tourism Zone with immersive cinematic experiences','Historical Street, Temple Complex, Old Western Street and Japanese Garden'],
+   imgs:[
+     [FC+'01-intro.jpg','Film City: Project Overview'],
+     [FC+'02-aerial-view.jpg','Aerial View: Themed Zones around the Central Lake'],
+     [FC+'03-aerial-masterplan.jpg','Master Plan: Aerial View with Parking and Entrance'],
+     [FC+'04-site-model-plan.jpg','Site Model: Top View'],
+     [FC+'05-model-closeup.jpg','Site Model: Central Plaza and Sets'],
+     [FC+'06-model-details.jpg','Site Model: Detail Views'],
+     [FC+'07-model-studio-zone.jpg','Site Model: Sound Stages and Film Studio'],
+     [FC+'08-entrance.jpg','Film City Entrance Gate and Pavilions'],
+     [FC+'09-historical-street.jpg','Historical Street and Temple Complex Elevations'],
+     [FC+'10-landscape.jpg','Landscape: Bridges, Canal and Pergolas'],
+     [FC+'11-japanese-garden.jpg','Japanese Garden'],
+     [FC+'12-japanese-exploded.jpg','Japanese Garden: Exploded View'],
+     [FC+'13-film-studio.jpg','Film Studio: Render and Exploded View'],
+     [FC+'14-studio-plan.jpg',"Film Studio: Ground Floor Plan and Section AA'"],
+     [FC+'15-sound-stages.jpg','Film Sound Stages: Plan and Section'],
+     [FC+'16-structure.jpg','Structural Detail and Acoustic Wall']
+   ]},
+  {t:'Skyline Residence', m:'Architecture · 2026', c:'Architecture', s:'building',
+   d:'A modern two-storey family home with a floating upper volume, full-height glazing and a calm, minimal facade that opens to the garden.',
+   i:{Location:'Chennai, India',Year:'2026',Area:'3,200 sq ft',Status:'Completed'},
+   f:['Cantilevered upper floor with deep shade overhang','Full-height glazing for natural light','Landscaped courtyard and terrace','Photoreal facade renders and walkthrough']},
+  {t:'Moonlit Suite', m:'Interior · 2026', c:'Interior', s:'interior',
+   d:'A warm, low-lit master suite that layers timber slats, soft textiles and concealed lighting for a hotel-like evening mood.',
+   i:{Location:'Bengaluru, India',Year:'2026',Area:'420 sq ft',Status:'Completed'},
+   f:['Timber slat feature wall with cove lighting','Custom upholstered bed and bench','Layered warm lighting scenes','Material and finish schedule']},
+  {t:'Pine Ridge Cabin', m:'Landscape · 2025', c:'Landscape', s:'cabin',
+   d:'A compact retreat cabin set among pines, designed around the site contours, the views and the way light changes from dawn to dusk.',
+   i:{Location:'Ooty, India',Year:'2025',Area:'850 sq ft',Status:'Completed'},
+   f:['Site-responsive placement and terrain study','Natural timber cladding','Native planting and pathways','Dawn, dusk and fog atmosphere renders']},
+  {t:'Rosewood Lounge', m:'Interior · 2025', c:'Interior', s:'living',
+   d:'A rich, social living space built around a deep amber sofa, built-in bookshelves and a bold statement drape.',
+   i:{Location:'Mumbai, India',Year:'2025',Area:'610 sq ft',Status:'Completed'},
+   f:['Built-in library wall','Statement curtains and rug','Curated colour palette','Furniture layout and sourcing list']},
+  {t:'Maison Hearth', m:'Interior · 2025', c:'Interior', s:'fireplace',
+   d:'A detail-led renovation centred on a sculptural fireplace, with brass inlays, fine mouldings and a timeless neutral shell.',
+   i:{Location:'Hyderabad, India',Year:'2025',Area:'380 sq ft',Status:'Completed'},
+   f:['Custom fireplace surround with brass detail','Mouldings and joinery drawings','Warm neutral material palette','Detail-level close-up renders']},
+  {t:'Harbor Plan', m:'Architecture · 2025', c:'Architecture', s:'plan',
+   d:'A space-planning study for a compact home, optimising circulation, light and room proportions before any construction begins.',
+   i:{Location:'Kochi, India',Year:'2025',Area:'1,400 sq ft',Status:'In progress'},
+   f:['Open living, dining and kitchen flow','Three layout options compared','Door, window and furniture planning','Construction-ready drawing set']}
+];
+const FLOW = [
+  {s:'plan', k:'Concept', t:'Sketch to floor plan',
+   p:[['layout','Start with your sketch','Bring a hand sketch or rough plan and use it as the foundation for the design.'],['edit','Refine the layout','Develop circulation, light and proportions without rebuilding from scratch.']]},
+  {s:'interior', k:'Interior', t:'Materials & mood',
+   p:[['sofa','Choose the palette','Test finishes, furniture and colour combinations side by side.'],['cube','See it in context','Preview every choice in a realistic 3D view before you commit.']]},
+  {s:'building', k:'Render', t:'From model to render',
+   p:[['cube','Start with your 3D model','Use a simple massing model as the base for a finished render.'],['bolt','Refine the result','Develop lighting, materials and atmosphere without rebuilding the scene.']]},
+  {s:'living', k:'Presentation', t:'Interior presentation',
+   p:[['camera','Pick the best angles','Frame the shots that tell the story of the space.'],['film','Bring it to life','Turn stills into smooth, cinematic walkthroughs.']]},
+  {s:'cabin', k:'Landscape', t:'Site & surroundings',
+   p:[['tree','Design the setting','Place the building in its landscape with accurate trees, terrain and light.'],['camera','Capture the mood','Dawn, dusk or fog — choose the atmosphere that fits.']]},
+  {s:'fireplace', k:'Detailing', t:'Perfecting the details',
+   p:[['edit','Zoom into details','Refine selected areas — joinery, mouldings, fittings and finishes.'],['check','Final sign-off','Review every detail with you before the project is handed over.']]}
+];
+const COMPARE = [['building','Architecture'],['interior','Interior'],['cabin','Retreat']];
+
+/* HELPERS + ICONS */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ICONS = {
+  building:'<path d="M4 21V8l8-5 8 5v13M9 21v-6h6v6M9 11h.01M15 11h.01"/>',
+  sofa:'<path d="M4 11V8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3M2 13a2 2 0 0 1 4 0v2h12v-2a2 2 0 0 1 4 0v5H2zM5 18v2M19 18v2"/>',
+  cube:'<path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>',
+  tree:'<path d="M12 22v-6M12 3 6 12h3l-4 6h14l-4-6h3z"/>',
+  layout:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+  hammer:'<path d="m14 7 3 3M4 20l8-8M13 3l8 8-3 3-8-8z"/>',
+  film:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="m22 8-6 4 6 4z"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/>',
+  bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  camera:'<rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1-3h6l1 3"/>',
+  check:'<path d="m5 12 5 5 9-10"/>'
+};
+const ico = n => `<svg class="ico" viewBox="0 0 24 24">${ICONS[n]||''}</svg>`;
+
+/* SVG SCENES (placeholder artwork) */
+let uid = 0;
+function scene(type, wire){
+  const id = 's'+(uid++), W = !!wire;
+  const F = c => W ? 'fill="#f3f7f8" stroke="#18252a" stroke-width="1.3" stroke-linejoin="round"' : `fill="${c}"`;
+  const G = n => `url(#${id}${n})`;
+  const bg = c => `<rect width="400" height="250" ${W?'fill="#fff"':`fill="${c}"`}/>`;
+  const lg = (n,a,b) => `<linearGradient id="${id}${n}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+  const ln = (x1,y1,x2,y2,c,w=2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${W?'#18252a':c}" stroke-width="${w}"/>`;
+  let d='', b='';
+  switch(type){
+    case 'building':
+      d = lg('s','#8fbfd3','#eaf3f4')+lg('g','#16343d','#6a97a3')+lg('f','#7b8884','#5e6a67');
+      b = bg(G('s'))
+        +`<rect y="190" width="400" height="60" ${F(G('f'))}/>`
+        +`<circle cx="36" cy="140" r="50" ${F('#2f4d38')}/><rect x="32" y="150" width="8" height="46" ${F('#4a3a2c')}/>`
+        +`<circle cx="372" cy="112" r="64" ${F('#27432f')}/><circle cx="330" cy="140" r="40" ${F('#355a41')}/><rect x="366" y="150" width="9" height="46" ${F('#4a3a2c')}/>`
+        +`<polygon points="275,122 345,138 345,196 275,196" ${F('#aeb2b0')}/>`
+        +`<rect x="70" y="126" width="205" height="70" ${F('#e9ecec')}/>`
+        +`<rect x="88" y="138" width="170" height="52" ${F(G('g'))}/>`
+        +ln(130,138,130,190,'#c9d2d2')+ln(172,138,172,190,'#c9d2d2')+ln(214,138,214,190,'#c9d2d2')
+        +`<polygon points="52,84 300,70 300,122 52,128" ${F('#f7f8f8')}/>`
+        +`<polygon points="88,96 268,86 268,114 88,118" ${F(G('g'))}/>`
+        +`<polygon points="46,80 306,66 306,72 46,86" ${F('#d3d8d8')}/>`;
+      break;
+    case 'interior':
+      d = lg('w','#8a7f70','#3d3832')+lg('fl','#35302a','#1b1815')+lg('gl','#ffe2a8','#ffb45c');
+      b = bg(G('w'))
+        +`<rect width="400" height="20" ${F('#1d1b18')}/>`
+        +`<rect x="80" y="44" width="240" height="104" ${F('#bdb09c')}/>`
+        +Array.from({length:12},(_,i)=>ln(92+i*19.5,44,92+i*19.5,148,'#9d907e',1.5)).join('')
+        +`<rect x="100" y="38" width="200" height="4" ${F(G('gl'))}/>`
+        +`<rect y="196" width="400" height="54" ${F(G('fl'))}/>`
+        +`<rect x="60" y="142" width="280" height="52" rx="6" ${F('#d6d0c6')}/>`
+        +`<rect x="60" y="166" width="280" height="34" rx="4" ${F('#a39f96')}/>`
+        +`<rect x="84" y="134" width="70" height="22" rx="7" ${F('#ece8e0')}/><rect x="246" y="134" width="70" height="22" rx="7" ${F('#ece8e0')}/>`
+        +`<rect x="22" y="160" width="28" height="40" ${F('#4a4238')}/>`
+        +ln(352,0,352,72,'#d9c9a0',1.5)+`<circle cx="352" cy="82" r="10" ${F('#f1e2bd')}/>`;
+      break;
+    case 'living':
+      d = lg('w','#c58b82','#8c5851')+lg('fl','#4a3228','#2a1c16');
+      b = bg(G('w'))
+        +`<rect y="196" width="400" height="54" ${F(G('fl'))}/>`
+        +`<rect x="18" y="34" width="92" height="160" ${F('#2a1c16')}/>`
+        +[70,104,138,168].map(y=>ln(18,y,110,y,'#6b4a3a',2)).join('')
+        +[26,44,62,80,96].map((x,i)=>`<rect x="${x}" y="${48+i%2*4}" width="10" height="22" ${F(['#c58b3a','#2f6b4f','#e8d9c0','#8c2f2f','#3d5a80'][i])}/>`).join('')
+        +`<rect x="150" y="40" width="104" height="104" ${F('#1f5a45')}/>`
+        +`<circle cx="180" cy="80" r="14" ${F('#f3efe6')}/><circle cx="214" cy="104" r="18" ${F('#f3efe6')}/><circle cx="230" cy="66" r="9" ${F('#f3efe6')}/>`
+        +`<rect x="328" y="0" width="72" height="196" ${F('#8b2d2d')}/>`
+        +[340,356,372,388].map(x=>ln(x,0,x,196,'#6d2020',2)).join('')
+        +`<rect x="116" y="150" width="200" height="48" rx="10" ${F('#c98d3b')}/>`
+        +`<rect x="116" y="128" width="200" height="34" rx="10" ${F('#b97c2c')}/>`
+        +`<rect x="136" y="140" width="48" height="26" rx="8" ${F('#e6c78a')}/><rect x="250" y="140" width="48" height="26" rx="8" ${F('#e6c78a')}/>`
+        +`<ellipse cx="64" cy="204" rx="40" ry="8" ${F('#1a110d')}/>`;
+      break;
+    case 'cabin':
+      d = lg('s','#566e6c','#b7c6c2');
+      b = bg(G('s'))
+        +`<rect y="150" width="400" height="60" ${W?'fill="#fff"':'fill="rgba(255,255,255,.18)"'}/>`
+        +[40,90,140,260,310,360].map((x,i)=>`<polygon points="${x},${120-i%3*10} ${x-26},${196} ${x+26},196" ${F('#3b5450')}/>`).join('')
+        +`<rect y="196" width="400" height="54" ${F('#2b3a35')}/>`
+        +`<polygon points="146,152 200,116 254,152" ${F('#3a2e26')}/>`
+        +`<rect x="156" y="152" width="88" height="44" ${F('#86603c')}/>`
+        +`<rect x="176" y="164" width="24" height="18" ${F('#ffd68a')}/><rect x="212" y="170" width="16" height="26" ${F('#4a3322')}/>`
+        +`<polygon points="14,60 -14,200 42,200" ${F('#1f3330')}/><polygon points="380,40 346,200 414,200" ${F('#1b2e2b')}/>`;
+      break;
+    case 'fireplace':
+      d = lg('w','#efe8dc','#cfc6b6')+lg('fire','#ffd36b','#e8541a');
+      b = bg(G('w'))
+        +ln(70,0,70,224,'#d4cbbb',2)+ln(330,0,330,224,'#d4cbbb',2)
+        +`<rect x="126" y="8" width="148" height="114" rx="3" ${F('#b9893a')}/>`
+        +`<rect x="136" y="18" width="128" height="94" ${F('#1a1410')}/>`
+        +`<rect x="96" y="120" width="208" height="14" ${F('#f6f1e8')}/>`
+        +`<rect x="110" y="134" width="180" height="92" ${F('#f1ebe0')}/>`
+        +`<rect x="144" y="150" width="112" height="76" ${F('#140b06')}/>`
+        +`<polygon points="160,226 172,186 184,206 196,170 208,204 220,184 232,226" ${F(G('fire'))}/>`
+        +`<rect y="224" width="400" height="26" ${F('#4a3626')}/>`
+        +`<circle cx="46" cy="80" r="14" ${F('#f0eadf')}/><circle cx="354" cy="80" r="14" ${F('#f0eadf')}/>`;
+      break;
+    case 'plan': {
+      const A = W ? '#18252a' : 'var(--cyan)', T = W ? '#18252a' : 'var(--cyan-hi)';
+      d = `<pattern id="${id}p" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" style="stroke:rgba(var(--rgb),.12)" stroke-width="1"/></pattern>`;
+      b = `<rect width="400" height="250" style="fill:${W?'#fff':'var(--s2)'}"/><rect width="400" height="250" fill="url(#${id}p)"/>`
+        +`<g style="fill:none;stroke:${A}" stroke-width="2.2">`
+        +`<rect x="50" y="36" width="300" height="178"/><path d="M50 120H190M190 36V214M190 120H350M270 120V214M120 36v30M120 66h70"/>`
+        +`<path d="M150 120a24 24 0 0 1 24 24" stroke-width="1.4"/><path d="M270 150a22 22 0 0 0 22 -22" stroke-width="1.4"/></g>`
+        +`<g style="fill:${T}" font-family="monospace" font-size="9"><text x="86" y="86">LIVING</text><text x="104" y="176">BED</text><text x="226" y="82">KITCHEN</text><text x="210" y="176">DINE</text><text x="292" y="176">BATH</text></g>`;
+      break; }
+  }
+  return `<svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs>${d}</defs>${b}</svg>`;
+}
+$$('[data-scene]').forEach(el=>{ el.innerHTML = scene(el.dataset.scene,false); });
+
+/* PROMO / NAV / REVEAL / FOOTER */
+$('#promoX').onclick = ()=>$('#promo').classList.add('hide');
+const mm = $('#mmenu');
+$('#burger').onclick = ()=>mm.classList.toggle('open');
+$$('#mmenu a').forEach(a=>a.onclick=()=>mm.classList.remove('open'));
+$('#yr').textContent = new Date().getFullYear();
+
+const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }),{threshold:.1});
+$$('.rv').forEach(el=>io.observe(el));
+
+/* HERO ORBIT PARTICLES */
+(function(){
+  const orbit=$('#orbit'), cv=$('#orbitCanvas'), ctx=cv.getContext('2d');
+  const nodes=$$('.node .bubble',orbit);
+  let W=0,H=0,dpr=1;
+  function size(){ const r=orbit.getBoundingClientRect(); dpr=Math.min(window.devicePixelRatio||1,2); W=r.width;H=r.height; cv.width=W*dpr;cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  size(); addEventListener('resize',size);
+  const P=Array.from({length:420},(_,i)=>({n:i%nodes.length,t:Math.random(),s:.0008+Math.random()*.0022,o:(Math.random()-.5)*2,z:Math.random()*1.5+.4}));
+  const amb=Array.from({length:70},()=>({x:Math.random(),y:Math.random(),v:.00005+Math.random()*.0002,z:Math.random()*1.4+.3,a:Math.random()}));
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const or=orbit.getBoundingClientRect(), cx=W/2, cy=H*.48;
+    const C=nodes.map(n=>{const r=n.getBoundingClientRect();return [r.left-or.left+r.width/2,r.top-or.top+r.height/2];});
+    amb.forEach(p=>{ p.y-=p.v; if(p.y<0)p.y=1; ctx.fillStyle=`rgba(${ACC},${.15+.25*Math.abs(Math.sin(p.a+=.01))})`; ctx.beginPath(); ctx.arc(p.x*W,p.y*H,p.z,0,7); ctx.fill(); });
+    P.forEach(p=>{
+      if(!reduced){ p.t+=p.s; if(p.t>1)p.t-=1; }
+      const [x0,y0]=C[p.n]||[cx,cy];
+      const mx=(x0+cx)/2, my=(y0+cy)/2, dx=cx-x0, dy=cy-y0, L=Math.hypot(dx,dy)||1;
+      const qx=mx-dy/L*L*.22, qy=my+dx/L*L*.22;
+      const t=p.t, a=(1-t)*(1-t), b=2*(1-t)*t, c=t*t;
+      let x=a*x0+b*qx+c*cx, y=a*y0+b*qy+c*cy;
+      const sp=Math.sin(Math.PI*t)*p.o*26; x+=-dy/L*sp; y+=dx/L*sp;
+      ctx.fillStyle=`rgba(${ACC},${Math.sin(Math.PI*t)*.85})`;
+      ctx.beginPath(); ctx.arc(x,y,p.z,0,7); ctx.fill();
+    });
+    if(!reduced) requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* BEFORE / AFTER */
+(function(){
+  const cmp=$('#compare'), before=$('#cmpBefore'), after=$('#cmpAfter'), handle=$('#cmpHandle'), th=$('#cmpThumbs');
+  let drag=false;
+  function pos(p){ p=Math.max(0,Math.min(100,p)); before.style.clipPath=`inset(0 ${100-p}% 0 0)`; handle.style.left=p+'%'; handle.setAttribute('aria-valuenow',Math.round(p)); }
+  function fromX(x){ const r=cmp.getBoundingClientRect(); pos((x-r.left)/r.width*100); }
+  cmp.addEventListener('pointerdown',e=>{drag=true;cmp.setPointerCapture(e.pointerId);fromX(e.clientX)});
+  cmp.addEventListener('pointermove',e=>{if(drag)fromX(e.clientX)});
+  cmp.addEventListener('pointerup',()=>drag=false);
+  handle.addEventListener('keydown',e=>{ const v=+handle.getAttribute('aria-valuenow'); if(e.key==='ArrowLeft')pos(v-4); if(e.key==='ArrowRight')pos(v+4); });
+  function set(i){
+    before.innerHTML=scene(COMPARE[i][0],true); after.innerHTML=scene(COMPARE[i][0],false);
+    $$('.thumb',th).forEach((t,k)=>t.classList.toggle('on',k===i));
+  }
+  COMPARE.forEach((c,i)=>{ const b=document.createElement('button'); b.className='thumb'; b.innerHTML=scene(c[0],false)+`<span>${c[1]}</span>`; b.onclick=()=>set(i); th.appendChild(b); });
+  set(0);
+  if(!reduced){ let p=50,dir=1,n=0; const t=setInterval(()=>{ p+=dir*1.2; pos(p); if(p>66)dir=-1; if(p<34&&dir<0){dir=1;} if(++n>90){clearInterval(t);pos(50);} },16); }
+})();
+
+/* CAROUSEL (center-focus) */
+function carousel(rootSel,dotsSel,items,start=0,delay=3600){
+  const root=$(rootSel), track=$('.cc-track',root), dots=$(dotsSel); const n=items.length; let a=start,timer;
+  const cards=items.map((it,i)=>{ const el=document.createElement('button'); el.className='cc-card'; el.innerHTML=`<span class="cc-ic">${it.icon}</span><b>${it.t}</b><small>${it.s}</small>`; el.onclick=()=>{go(i);restart()}; track.appendChild(el); return el; });
+  const ds=items.map((_,i)=>{ const b=document.createElement('button'); b.setAttribute('aria-label','Item '+(i+1)); b.onclick=()=>{go(i);restart()}; dots.appendChild(b); return b; });
+  function layout(){
+    const cw=cards[0].offsetWidth, gap=16;
+    cards.forEach((el,i)=>{ let d=i-a; if(d>n/2)d-=n; if(d<-n/2)d+=n;
+      const x=d*(cw+gap)+(d>0?cw*.14:d<0?-cw*.14:0);
+      el.style.transform=`translate(-50%,-50%) translateX(${x}px) scale(${d===0?1.1:1})`;
+      el.style.opacity=Math.abs(d)>3?0:d===0?1:Math.max(.28,1-Math.abs(d)*.2);
+      el.style.zIndex=10-Math.abs(d); el.style.pointerEvents=Math.abs(d)>3?'none':'auto'; el.classList.toggle('on',d===0); });
+    ds.forEach((b,i)=>b.classList.toggle('on',i===a));
+  }
+  function go(i){ a=(i+n)%n; layout(); }
+  function restart(){ clearInterval(timer); if(!reduced) timer=setInterval(()=>go(a+1),delay); }
+  addEventListener('resize',layout);
+  root.addEventListener('mouseenter',()=>clearInterval(timer)); root.addEventListener('mouseleave',restart);
+  layout(); restart();
+}
+carousel('#ccServices','#ccServicesDots',SERVICES.map(s=>({t:s.t,s:s.s,icon:ico(s.i)})),2);
+carousel('#ccSoft','#ccSoftDots',SOFTWARE.map(s=>({t:s[0],s:s[1],icon:s[0].replace(/[^A-Za-z0-9]/g,'').slice(0,2)})),3);
+
+/* WALKTHROUGH GALLERY */
+(function(){
+  const frame=$('#cineFrame'), label=$('#cineLabel'), gal=$('#cineGal'); let cur=0,timer;
+  const scs=CINE.map(c=>{ const d=document.createElement('div'); d.className='sc'; d.innerHTML=scene(c[0],false); d.style.opacity=0; frame.insertBefore(d,label); return d; });
+  const btns=CINE.map((c,i)=>{ const b=document.createElement('button'); b.innerHTML=scene(c[0],false)+`<span>${c[1]}</span>`; b.onclick=()=>{set(i);restart()}; gal.appendChild(b); return b; });
+  function set(i){ cur=i; scs.forEach((s,k)=>s.style.opacity=k===i?1:0); btns.forEach((b,k)=>b.classList.toggle('on',k===i)); label.textContent=CINE[i][1]; }
+  function restart(){ clearInterval(timer); if(!reduced) timer=setInterval(()=>set((cur+1)%CINE.length),4200); }
+  set(0); restart();
+})();
+
+/* PROJECTS (cards) */
+(function(){
+  const grid=$('#projGrid'), fl=$('#filters');
+  const cats=['All',...new Set(PROJECTS.map(p=>p.c))];
+  PROJECTS.forEach(p=>{ const a=document.createElement('a'); a.href='#'; a.className='proj'; a.dataset.c=p.c;
+    a.innerHTML=`<div class="sc">${p.cover?`<img src="${p.cover}" alt="${p.t}" loading="lazy">`:scene(p.s,false)}</div><div class="inf"><div><h3>${p.t}</h3><p>${p.m}</p></div><span class="go"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>`;
+    a.onclick=e=>{e.preventDefault();openProject(PROJECTS.indexOf(p));}; grid.appendChild(a); });
+  cats.forEach((c,i)=>{ const b=document.createElement('button'); b.className='fchip'+(i?'':' on'); b.textContent=c;
+    b.onclick=()=>{ $$('.fchip',fl).forEach(x=>x.classList.remove('on')); b.classList.add('on'); $$('.proj',grid).forEach(p=>p.classList.toggle('hidden',c!=='All'&&p.dataset.c!==c)); };
+    fl.appendChild(b); });
+})();
+
+/* PROJECT DETAIL MODAL + IMAGE GALLERY */
+let pmIdx=0, gIdx=0, gList=null;
+const pm=document.getElementById('pm');
+
+function showG(i){
+  gIdx=(i+gList.length)%gList.length;
+  const img=document.getElementById('gImg');
+  img.classList.add('fade');
+  setTimeout(()=>{
+    img.src=gList[gIdx][0]; img.alt=gList[gIdx][1];
+    document.getElementById('gCap').textContent=gList[gIdx][1];
+    document.getElementById('gCount').textContent=(gIdx+1)+' / '+gList.length;
+    img.classList.remove('fade');
+  },120);
+  const thumbs=[...document.querySelectorAll('#gStrip img')];
+  thumbs.forEach((t,k)=>t.classList.toggle('on',k===gIdx));
+  if(thumbs[gIdx]) thumbs[gIdx].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+}
+function buildGallery(p,box){
+  gList=p.imgs;
+  box.classList.add('has-gal');
+  box.innerHTML='<div class="pm-gal"><div class="stage">'
+    +'<button class="gn gp" id="gPrev" aria-label="Previous image">&#10094;</button>'
+    +'<img id="gImg" alt="">'
+    +'<button class="gn gx" id="gNext" aria-label="Next image">&#10095;</button>'
+    +'<span class="gcount" id="gCount"></span><span class="gcap" id="gCap"></span>'
+    +'</div><div class="strip" id="gStrip"></div></div>';
+  const strip=document.getElementById('gStrip');
+  gList.forEach((g,k)=>{ const t=document.createElement('img'); t.src=g[0]; t.alt=g[1]; t.loading='lazy'; t.onclick=()=>showG(k); strip.appendChild(t); });
+  document.getElementById('gPrev').onclick=()=>showG(gIdx-1);
+  document.getElementById('gNext').onclick=()=>showG(gIdx+1);
+  showG(0);
+}
+
+function openProject(i){
+  const n=PROJECTS.length; pmIdx=(i+n)%n; const p=PROJECTS[pmIdx];
+  const box=document.getElementById('pmImg');
+  if(p.imgs){ buildGallery(p,box); }
+  else { gList=null; box.classList.remove('has-gal'); box.innerHTML='<div class="sc">'+scene(p.s,false)+'</div>'; }
+  document.getElementById('pmCat').textContent=p.m;
+  document.getElementById('pmTitle').textContent=p.t;
+  document.getElementById('pmDesc').textContent=p.d;
+  document.getElementById('pmStats').innerHTML=Object.entries(p.i).map(([k,v])=>'<div><small>'+k+'</small><b>'+v+'</b></div>').join('');
+  document.getElementById('pmFeat').innerHTML=p.f.map(x=>'<li>'+x+'</li>').join('');
+  pm.classList.add('open'); document.body.style.overflow='hidden';
+}
+function closeProject(){ pm.classList.remove('open'); document.body.style.overflow=''; }
+
+document.getElementById('pmX').onclick=closeProject;
+document.getElementById('pmCta').onclick=closeProject;
+document.getElementById('pmPrev').onclick=()=>openProject(pmIdx-1);
+document.getElementById('pmNext').onclick=()=>openProject(pmIdx+1);
+pm.addEventListener('click',e=>{ if(e.target===pm) closeProject(); });
+
+addEventListener('keydown',e=>{
+  if(!pm.classList.contains('open')) return;
+  if(e.key==='Escape') closeProject();
+  if(e.key==='ArrowLeft')  gList ? showG(gIdx-1) : openProject(pmIdx-1);
+  if(e.key==='ArrowRight') gList ? showG(gIdx+1) : openProject(pmIdx+1);
+});
+
+/* COVERFLOW WORKFLOW */
+(function(){
+  const cf=$('#cf'), dotsEl=$('#cfDots'), info=$('#cfInfo'); const n=FLOW.length; let a=2,timer;
+  const cards=FLOW.map((f,i)=>{ const el=document.createElement('div'); el.className='cf-card'; el.innerHTML=`<div class="sc">${scene(f.s,false)}</div><div class="cap"><small>${f.k}</small><b>${f.t}</b></div>`; el.onclick=()=>{go(i);restart()}; cf.appendChild(el); return el; });
+  const ds=FLOW.map((_,i)=>{ const b=document.createElement('button'); b.setAttribute('aria-label','Stage '+(i+1)); b.onclick=()=>{go(i);restart()}; dotsEl.appendChild(b); return b; });
+  function layout(){
+    const cw=cards[0].offsetWidth;
+    cards.forEach((el,i)=>{ let d=i-a; if(d>n/2)d-=n; if(d<-n/2)d+=n; const ad=Math.abs(d);
+      el.style.transform=`translate(-50%,-50%) translateX(${d*cw*.78}px) scale(${d===0?1:Math.max(.7,1-ad*.14)})`;
+      el.style.opacity=ad>2?0:1-ad*.25; el.style.zIndex=10-ad; el.style.pointerEvents=ad>2?'none':'auto'; el.classList.toggle('on',d===0); });
+    ds.forEach((b,i)=>b.classList.toggle('on',i===a));
+    info.innerHTML=FLOW[a].p.map(p=>`<div><span class="ic">${ico(p[0])}</span><div><b>${p[1]}</b><p>${p[2]}</p></div></div>`).join('');
+  }
+  function go(i){ a=(i+n)%n; layout(); }
+  function restart(){ clearInterval(timer); if(!reduced) timer=setInterval(()=>go(a+1),4800); }
+  $('#cfPrev').onclick=()=>{go(a-1);restart()}; $('#cfNext').onclick=()=>{go(a+1);restart()};
+  addEventListener('resize',layout); layout(); restart();
+})();
+
+/* PRICING */
+(function(){
+  const wrap=$('#plans');
+  const chk='<svg class="ico" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>';
+  function render(k){
+    wrap.innerHTML=PLANS[k].map(p=>{
+      const price = isNaN(parseInt(p.price)) ? p.price : CURRENCY+'<span style="font-size:inherit">'+p.price+'</span>';
+      return `<div class="plan${p.pop?' pop':''}">
+        ${p.badge?`<span class="badge${p.purple?' pu':''}">${p.badge}</span>`:''}
+        <div class="eb">${p.eb}</div><h3>${p.name}</h3><div class="ds">${p.ds}</div>
+        <div class="pr">${price}${p.unit?`<small>${p.unit}</small>`:''}</div>
+        <a href="#contact" class="btn ${p.pop?'btn-fill':'btn-out'}">${p.cta} →</a>
+        <div class="box"><h5>${ico('cube')} Included</h5><ul>${p.box.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div class="add"><h5>Additional features</h5><ul>${p.add.map(x=>`<li>${chk}${x}</li>`).join('')}</ul></div></div>`;
+    }).join('');
+  }
+  $$('#toggle button').forEach(b=>b.onclick=()=>{ $$('#toggle button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); render(b.dataset.k); });
+  render('residential');
+})();
+
+/* FAQ */
+(function(){
+  const list=$('#faqList');
+  list.innerHTML=FAQS.map((f,i)=>`<div class="faq${i===0?' open':''}"><button><span class="n">${String(i+1).padStart(2,'0')}</span>${f[0]}<span class="pl">+</span></button><div class="an"><div><code>${f[1]}</code><p>${f[2]}</p></div></div></div>`).join('');
+  const items=$$('.faq',list);
+  function open(el){ items.forEach(o=>{o.classList.remove('open');$('.an',o).style.maxHeight=0}); if(el){el.classList.add('open');$('.an',el).style.maxHeight=$('.an',el).scrollHeight+'px';} }
+  items.forEach(el=>$('button',el).onclick=()=>open(el.classList.contains('open')?null:el));
+  open(items[0]);
+})();
+
+/* CONTACT FORM */
+$('#form').addEventListener('submit',e=>{
+  e.preventDefault(); const f=new FormData(e.target);
+  const body=`Name: ${f.get('name')}\nEmail: ${f.get('email')}\nProject type: ${f.get('type')}\n\n${f.get('msg')}`;
+  location.href=`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Project enquiry — '+f.get('type'))}&body=${encodeURIComponent(body)}`;
+  $('#fnote').textContent='Opening your email app… thank you!';
+});
+
+/* CHAT WIDGET */
+(function(){
+  const fab=$('#chatFab'), box=$('#chat'), body=$('#chatB'), form=$('#chatF'), inp=$('#chatI'); let started=false;
+  const REPLIES=[
+    [/price|cost|package|budget|fee|quote/i,'Our packages start with a free 30-minute consultation. Concept, Design and Turnkey options follow — see the <b>Packages</b> section, or tell me your project size and we will prepare a quote.'],
+    [/service|offer|do you|design|architect|interior|render|3d/i,'We offer architecture, interior design, space planning, renovation, landscape concepts, photorealistic 3D renders and cinematic walkthroughs.'],
+    [/time|long|week|day|deliver|duration/i,'A first concept is usually ready within a few days. Full design packages take a few weeks depending on size and feedback speed.'],
+    [/contact|email|call|book|talk|meet|consult/i,'You can book a free consultation using the form in the <b>Contact</b> section — we reply within one business day.'],
+    [/start|begin|how/i,'Easy: share a short brief (photos or plans, budget range and the style you love) through the contact form, and we will guide you from there.']
+  ];
+  function add(cls,html){ const m=document.createElement('div'); m.className='msg '+cls; m.innerHTML=html; body.appendChild(m); body.scrollTop=body.scrollHeight; return m; }
+  function reply(q){ const hit=REPLIES.find(r=>r[0].test(q)); setTimeout(()=>add('bot',hit?hit[1]:'Thanks for your message! For anything specific, please use the contact form and the studio team will reply within one business day.'),500); }
+  function send(t){ if(!t.trim())return; const m=add('me',''); m.textContent=t; reply(t); }
+  function open(){
+    box.classList.add('open');
+    if(!started){ started=true;
+      add('bot','Hey there! 👋 Welcome to <b>Arketz Design Studio</b>. I can help with:<ul><li>Answering your questions</li><li>Clarifying our services</li><li>Guiding you to the right package</li></ul>What can I help you with today?');
+      const q=document.createElement('div'); q.className='qr'; ['Services','Pricing','Timeline','Contact'].forEach(l=>{ const b=document.createElement('button'); b.textContent=l; b.onclick=()=>send(l==='Timeline'?'How long does it take?':l==='Pricing'?'What are the prices?':l); q.appendChild(b); }); body.appendChild(q);
+    }
+    inp.focus();
+  }
+  fab.onclick=()=>box.classList.contains('open')?box.classList.remove('open'):open();
+  $('#chatX').onclick=()=>box.classList.remove('open');
+  form.onsubmit=e=>{ e.preventDefault(); send(inp.value); inp.value=''; };
+})();
+</script>
+</body>
+</html>
